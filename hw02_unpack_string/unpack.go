@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
 var ErrInvalidString = errors.New("invalid string")
@@ -12,13 +13,13 @@ var ErrInvalidString = errors.New("invalid string")
 func Unpack(str string) (string, error) {
 	res := new(strings.Builder)
 	input := []rune(str)
-	if len(input) != 0 && unicode.IsDigit(input[0]) {
+	if utf8.RuneCountInString(str) != 0 && unicode.IsDigit(input[0]) {
 		return "", ErrInvalidString
 	}
 	if str == "" {
 		return "", nil
 	}
-	for i := 0; i < len(input)-1; i++ {
+	for i := 0; i < utf8.RuneCountInString(str)-1; i++ {
 		if unicode.IsDigit(input[i]) && unicode.IsDigit(input[i+1]) {
 			return "", ErrInvalidString
 		}

@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
-	"unicode/utf8"
 )
 
 var ErrInvalidString = errors.New("invalid string")
@@ -13,17 +12,20 @@ var ErrInvalidString = errors.New("invalid string")
 func Unpack(str string) (string, error) {
 	res := new(strings.Builder)
 	input := []rune(str)
-	if utf8.RuneCountInString(str) != 0 && unicode.IsDigit(input[0]) {
-		return "", ErrInvalidString
-	}
-	if str == "" {
+
+	if len(input) == 0 {
 		return "", nil
 	}
-	for i := 0; i < utf8.RuneCountInString(str)-1; i++ {
-		if unicode.IsDigit(input[i]) && unicode.IsDigit(input[i+1]) {
+
+	if unicode.IsDigit(input[0]) {
+		return "", ErrInvalidString
+	}
+
+	for i := 0; i < len(input)-1; i++ {
+		if ((input[i] <= 57) && (input[i] >= 48)) && (input[i+1] <= 57) && (input[i+1] >= 48) {
 			return "", ErrInvalidString
 		}
-		if !unicode.IsDigit(input[i]) && unicode.IsDigit(input[i+1]) {
+		if !((input[i] <= 57) && (input[i] >= 48)) && ((input[i+1] <= 57) && (input[i+1] >= 48)) {
 			count, err := strconv.Atoi(string(input[i+1]))
 			if err != nil {
 				return "", err
@@ -31,11 +33,11 @@ func Unpack(str string) (string, error) {
 			substr := strings.Repeat(string(input[i]), count)
 			res.WriteString(substr)
 			continue
-		} else if !unicode.IsDigit(input[i]) {
+		} else if !(48 <= input[i] && input[i] <= 57) {
 			res.WriteString(string(input[i]))
 		}
 	}
-	if !unicode.IsDigit(input[len(input)-1]) {
+	if !(48 <= input[len(input)-1] && input[len(input)-1] <= 57) {
 		res.WriteRune(input[len(input)-1])
 	}
 	return res.String(), nil

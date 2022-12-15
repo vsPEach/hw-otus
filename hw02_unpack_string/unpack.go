@@ -4,7 +4,6 @@ import (
 	"errors"
 	"strconv"
 	"strings"
-	"unicode"
 )
 
 var ErrInvalidString = errors.New("invalid string")
@@ -17,15 +16,15 @@ func Unpack(str string) (string, error) {
 		return "", nil
 	}
 
-	if unicode.IsDigit(input[0]) {
+	if isNum(input[0]) {
 		return "", ErrInvalidString
 	}
 
 	for i := 0; i < len(input)-1; i++ {
-		if ((input[i] <= 57) && (input[i] >= 48)) && (input[i+1] <= 57) && (input[i+1] >= 48) {
+		if isNum(input[i]) && isNum(input[i+1]) {
 			return "", ErrInvalidString
 		}
-		if !((input[i] <= 57) && (input[i] >= 48)) && ((input[i+1] <= 57) && (input[i+1] >= 48)) {
+		if !isNum(input[i]) && isNum(input[i+1]) {
 			count, err := strconv.Atoi(string(input[i+1]))
 			if err != nil {
 				return "", err
@@ -33,12 +32,16 @@ func Unpack(str string) (string, error) {
 			substr := strings.Repeat(string(input[i]), count)
 			res.WriteString(substr)
 			continue
-		} else if !(48 <= input[i] && input[i] <= 57) {
+		} else if !isNum(input[i]) {
 			res.WriteString(string(input[i]))
 		}
 	}
-	if !(48 <= input[len(input)-1] && input[len(input)-1] <= 57) {
+	if !isNum(input[len(input)-1]) {
 		res.WriteRune(input[len(input)-1])
 	}
 	return res.String(), nil
+}
+
+func isNum(num rune) bool {
+	return (num <= 57) && (num >= 48)
 }

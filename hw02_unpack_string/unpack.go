@@ -43,5 +43,5 @@ func Unpack(str string) (string, error) {
 }
 
 func isNum(num rune) bool {
-	return (num <= 57) && (num >= 48)
+	return (num <= '9') && (num >= '0')
 }

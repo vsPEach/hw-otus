@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// Change to true if needed.
 var taskWithAsteriskIsCompleted = false
 
 var text = `Как видите, он  спускается  по  лестнице  вслед  за  своим
@@ -43,6 +42,10 @@ var text = `Как видите, он  спускается  по  лестни�
 	посидеть у огня и послушать какую-нибудь интересную сказку.
 		В этот вечер...`
 
+var withSpacesString = "a	c s hello world a"
+
+var specialSymbols = "💥 💥 💥 💥 ❎ ❎ ❎ ❎"
+
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
 		require.Len(t, Top10(""), 0)
@@ -50,19 +53,42 @@ func TestTop10(t *testing.T) {
 
 	t.Run("positive test", func(t *testing.T) {
 		if taskWithAsteriskIsCompleted {
-			expected := []string{
-				"а",         // 8
-				"он",        // 8
-				"и",         // 6
-				"ты",        // 5
-				"что",       // 5
-				"в",         // 4
-				"его",       // 4
-				"если",      // 4
-				"кристофер", // 4
-				"не",        // 4
+			tests := []struct {
+				expected []string
+				input    string
+			}{
+				{
+					expected: []string{
+						"а",         // 8
+						"он",        // 8
+						"и",         // 6
+						"ты",        // 5
+						"что",       // 5
+						"в",         // 4
+						"его",       // 4
+						"если",      // 4
+						"кристофер", // 4
+						"не",        // 4
+					}, input: text},
+				{
+					expected: []string{
+						"a",
+						"c",
+						"hello",
+						"s",
+						"world",
+					}, input: withSpacesString,
+				},
+				{
+					expected: []string{
+						"💥",
+						"❎",
+					}, input: specialSymbols,
+				},
 			}
-			require.Equal(t, expected, Top10(text))
+			for _, test := range tests {
+				require.Equal(t, test.expected, Top10(test.input))
+			}
 		} else {
 			expected := []string{
 				"он",        // 8

@@ -69,7 +69,8 @@ func TestTop10(t *testing.T) {
 						"если",      // 4
 						"кристофер", // 4
 						"не",        // 4
-					}, input: text},
+					}, input: text,
+				},
 				{
 					expected: []string{
 						"a",

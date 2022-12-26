@@ -48,6 +48,13 @@ const (
 	specialSymbols = "💥 💥 💥 💥 ❎ ❎ ❎ ❎"
 )
 
+func BenchmarkTop10(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		Top10(text)
+	}
+}
+
 func TestTop10(t *testing.T) {
 	t.Run("no words in empty string", func(t *testing.T) {
 		require.Len(t, Top10(""), 0)
@@ -55,7 +62,6 @@ func TestTop10(t *testing.T) {
 
 	t.Run("positive test", func(t *testing.T) {
 		if taskWithAsteriskIsCompleted {
-
 		} else {
 			tests := []struct {
 				expected []string

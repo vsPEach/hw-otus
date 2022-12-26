@@ -11,20 +11,20 @@ func Top10(text string) []string {
 	for _, key := range fields {
 		top[key]++
 	}
-
 	keys := make([]string, 0, len(top))
-
 	for key := range top {
 		keys = append(keys, key)
 	}
 
-	sort.Strings(keys)
-
-	sort.SliceStable(keys, func(i, j int) bool {
-		return top[keys[i]] > top[keys[j]]
+	sort.Slice(keys, func(i, j int) bool {
+		if top[keys[i]] != top[keys[j]] {
+			return top[keys[i]] > top[keys[j]]
+		}
+		return keys[i] < keys[j]
 	})
-	if len(keys) == 0 {
-		return nil
+
+	if len(keys) <= 10 {
+		return keys
 	}
 	return keys[:10]
 }

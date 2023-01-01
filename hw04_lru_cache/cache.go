@@ -29,11 +29,10 @@ func (l *lruCache) Set(key Key, value interface{}) bool {
 		l.items[key].Value = value
 		l.queue.MoveToFront(l.items[key])
 		return true
-	} else {
-		l.queue.PushFront(value)
-		l.items[key] = l.queue.Front()
-		return false
 	}
+	l.queue.PushFront(value)
+	l.items[key] = l.queue.Front()
+	return false
 }
 
 func (l *lruCache) Get(key Key) (interface{}, bool) {

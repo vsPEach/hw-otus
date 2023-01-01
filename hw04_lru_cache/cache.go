@@ -46,7 +46,6 @@ func (l *lruCache) Get(key Key) (interface{}, bool) {
 }
 
 func (l *lruCache) Clear() {
-
 }
 
 func NewCache(capacity int) Cache {
